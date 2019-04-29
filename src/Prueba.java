@@ -4,40 +4,113 @@ import SQLBean.RegistroSQLBean;
 
 public class Prueba {
 	public static void main(String[] args) {
-		// Creamos objetos para llamar a los metodos
+		
 		GestorSQLBean g = new GestorSQLBean();
 		RegistroSQLBean r = new RegistroSQLBean();
-		//Conectamos a la base de datos pasando el nombre, la ip, el puerto, usuario y contrasena
+
+		/* -------------------------------------- IMDB -------------------------------------- */
+
+		/*
+		 * Base de datos --> IMDB
+		 * Usuario --> root
+		 * Password --> ""
+		 * Ejecutamos todas las sentencias
+		 */
 		g.conexionSQL("imdb", "localhost", "3306", "root", "");
-
-		//Hacemos un insert, tenemos 3 peliculas insertadas anteriormente, esta sera la cuarta.
 		g.sentenciaSQL("INSERT INTO `movies`(`name`, `genre`, `director`, `date`) VALUES ('Iron Maannn','Action/Sci-Fi','Jon Favreau','30/04/2008')");
-
-		//Select de todas las peliculas
 		g.sentenciaSQL("SELECT * FROM movies");
-		//Hacemos un update del insert que hicimos anteriormente, el nombre estaba mal
 		g.sentenciaSQL("UPDATE movies SET name='Iron Man' WHERE id=4");
-	
-		//Eliminamos la pelicula que se llama Venom
 		g.sentenciaSQL("DELETE FROM movies WHERE name = 'Venom'");
-		 
-		//Procedure para insertar otra pelicula, como no se especifica nada, este procedure solo funciona para la base de datos de imdb,
-		//ya que los parametros que recibe son de una pelicula, y solo funciona una vez, para volver a probar hay que eliminar el procedure,
-		//ya que se crea desde codigo y no desde phpmyadmin.
-		//Se podria crear uno vacio para todas las base de datos y solo llamarlo.
 		g.sentenciaSQL("CALL myProcedure");
+		/*
+		 * Base de datos --> IMDB
+		 * Usuario --> pepe
+		 * Password --> MyPassword
+		 */
+		g.conexionSQL("imdb", "localhost", "3306", "pepe", "MyPassword");
+		g.sentenciaSQL("DELETE FROM movies WHERE name = 'Deadpool'");
+		g.sentenciaSQL("SELECT * FROM movies");
 
-		//Metodo para printar todo el arraylist de registros.
-		r.printarTodosRegistros();
-		 
-		//Metodo para consultar datos pasando el nombre de base de datos y tipo de consulta
-		g.consultarPor("imdb", "select");
-		//Metodo para consultar datos pasando el nombre de base de datos y el uusuario
-		g.consultarPor("imdb", "root");
-		//Metodo para consultar datos pasando el nombre de base de datos, usuario, y tipo de consulta
-		g.consultarPor("imdb", "root", "SELECT");
+		/*
+		 * Base de datos --> IMDB
+		 * Usuario --> luke
+		 * Password --> MyPassword
+		 */
+		g.conexionSQL("imdb", "localhost", "3306", "luke", "MyPassword");
+		g.sentenciaSQL("INSERT INTO `movies`(`name`, `genre`, `director`, `date`) VALUES ('Avengers: Endgame','Action/Fantasy','Anthony Russo & Joe Russo','25/04/2019')");
+
+		/* -------------------------------------- Amazon -------------------------------------- */
 		
-		//Tengo 3 base de datos para hacer pruebas, con usuarios (luke, MyPassword)(pepe, MyPassword) que lo mostrare en la demo
-	}
+		/*
+		 * Base de Datos --> Amazon
+		 * Usuario --> luke
+		 * Password --> MyPassword
+		 * Ejecutamos todas las sentencias
+		 */
+		g.conexionSQL("amazon", "localhost", "3306", "luke", "MyPassword");
+		g.sentenciaSQL("INSERT INTO `products`(`name`, `price`) VALUES ('Amazon Echo','1000')");
+		g.sentenciaSQL("SELECT * FROM products");
+		g.sentenciaSQL("UPDATE products SET price='100' WHERE name='Amazon Echo'");
+		g.sentenciaSQL("DELETE FROM products WHERE id = 1");
+		/*
+		 * Base de Datos --> Amazon
+		 * Usuario --> root
+		 * Password --> ""
+		 */
+		g.conexionSQL("amazon", "localhost", "3306", "root", "");
+		g.sentenciaSQL("INSERT INTO `products`(`name`, `price`) VALUES ('Samsung Galaxy S10+','954')");
+		g.sentenciaSQL("INSERT INTO `products`(`name`, `price`) VALUES ('Toshiba 50LF621U19 4K','380')");
 	
-}	
+		/* -------------------------------------- Football -------------------------------------- */
+		
+		/*
+		 * Base de Datos --> Football
+		 * Usuario --> pepe
+		 * Password --> MyPassword
+		 * Ejecutamos todas las sentencias
+		 */
+		g.conexionSQL("football", "localhost", "3306", "pepe", "MyPassword");
+		g.sentenciaSQL("INSERT INTO `players`(`name`, `age`,`team`) VALUES ('Mohamed Salah','26','Egypt')");
+		g.sentenciaSQL("DELETE FROM players WHERE id = 1");
+		g.sentenciaSQL("INSERT INTO `players`(`name`, `age`,`team`) VALUES ('Eden Hazard','29','Belgium')");
+
+		/*
+		 * Base de Datos --> Football
+		 * Usuario --> root
+		 * Password --> ""
+		 */
+		g.conexionSQL("football", "localhost", "3306", "root", "");
+		g.sentenciaSQL("DELETE FROM players WHERE id = 2");
+		g.sentenciaSQL("UPDATE players SET age='28' WHERE name='Eden Hazard'");
+		
+
+		/* ************************************** CONSULTAS ************************************** */
+
+		/* CONSULTAS --> IMDB */
+		System.out.println("Base de datos --> IMDB");
+		g.consultarPor("imdb", "root");
+		g.consultarPor("imdb", "pepe");
+		g.consultarPor("imdb", "pepe", "SELECT");
+		System.out.println();
+		System.out.println();
+		/* CONSULTAS --> Amazon */
+		System.out.println("Base de datos --> Amazon");
+		g.consultarPor("amazon", "root");
+		g.consultarPor("amazon", "luke", "INSERT");
+		System.out.println();
+		System.out.println();
+		/* CONSULTAS --> Football */
+		System.out.println("Base de datos --> Football");
+		g.consultarPor("football", "DELETE");
+		g.consultarPor("football", "pepe", "INSERT");
+		
+
+		/*METODO PARA PRINTAR TODOS LOS REGISTROS DE USUARIOS Y BASE DE DATOS
+		 * r.printarTodosRegistros();
+		 */
+		
+		 
+
+	}
+
+}
